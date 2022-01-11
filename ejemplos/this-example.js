@@ -20,7 +20,7 @@ const limon = new Fruta('Limon');
 //this será: de derecha izquierda lo que hay después del primer punto
 // limon.saluda();
 
-//asçi perdemos el this
+//asi perdemos el this
 const saludador = limon.saluda;
 // se pierde el this, si no uso arrow function
 // saludador();
