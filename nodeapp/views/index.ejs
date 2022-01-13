@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+</head>
+
+<body>
+    <% include header.ejs  %>
+        <!-- simbolo "-" sirve para que interprete la variable
+    como si fuera código  ejemplo es un trozo de código ahora
+    y se inyecta en el html como tal, si se usa el "="
+    entonces lo trata como cadena de txto-->
+        <%= ejemplo + '22' %>
+            <h2>Ejemplo de condicionales</h2>
+            <% if (condicion.esPar){ %>
+                <p>El segundo actual
+                    <%= condicion.segundo %> es par</p>
+                <% } else { %>
+                    <p>El segundo actual
+                        <%= condicion.segundo %> es impar</p>
+                    <% } %>
+                        <h2>Ejemplo de bucle</h2>
+                        <% usuarios.forEach((user)=>{ %>
+                            <li>
+                                El usuario
+                                <%= user.nombre %> tiene
+                                    <%= user.edad %>
+                            </li>
+
+                            <%  }) %>
+</body>
+
 </html>
