@@ -3,11 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan'); //middleware para hacer logs de un aplicación en nodejs
-
-// var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+const { isAPIRequest } = require('./lib/utils')
+    // var indexRouter = require('./routes/index');
+    // var usersRouter = require('./routes/users');
 
 var app = express();
+
+require('./lib/connectMongoose');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,6 +31,14 @@ app.use(cookieParser());
 //mdw de ficheros estáticos
 app.use(express.static(path.join(__dirname, 'public'))); //esto evalúa los ficheros estáticos que cuelgan de /public por ejemplo --> /stylesheets/style.css 
 
+
+/**
+ * RUTAS DE MI API
+ */
+//uso en la aplicación la ruta de agentes que acabo de crear
+app.use('/api/agentes', require('./routes/api/agentes'));
+
+
 /**
  * Rutas de mi website
  */
@@ -36,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public'))); //esto evalúa los fich
 // app.use('/users', usersRouter);
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
+
 
 
 // catch 404 and forward to error handler
@@ -55,13 +66,23 @@ app.use(function(err, req, res, next) {
         err.message = `(${errInfo.location}) ${errInfo.param} - ${errInfo.msg}`;
     }
 
+    res.status(err.status || 500);
+
+    //si es un error en el API respondo con un JSON
+    if (isAPIRequest(req)) {
+        res.json({ error: err.message });
+        return;
+    }
+
+
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
     // render the error page
-    res.status(err.status || 500);
     res.render('error');
 });
+
+
 
 module.exports = app;

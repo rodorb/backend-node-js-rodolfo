@@ -1,6 +1,7 @@
 var express = require('express');
-var router = express.Router();
 const { query, body, param, validationResult } = require('express-validator');
+const { sleep } = require('../lib/utils.js')
+var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -67,6 +68,20 @@ router.post('/bodyparams', (request, response, next) => {
     const nombre = request.body['nombre'];
     console.log(request.body);
     response.send(`Recibido el nombre ${nombre}`);
+});
+
+
+
+//ruta asincrona
+router.get('/espera', async(request, response, next) => {
+    try {
+        // const RESULT = await sleep(2000);
+        const RESULT = await sleep('2000');
+        response.send(RESULT);
+    } catch (error) {
+        next(new Error(error));
+    }
+
 });
 
 module.exports = router;
