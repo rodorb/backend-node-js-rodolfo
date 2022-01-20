@@ -6,8 +6,8 @@ const MONGOOSE = require('mongoose');
 
 //definir un schema
 const AGENTE_SCHEMA = MONGOOSE.Schema({
-        name: String,
-        age: { type: Number, min: 18, max: 120 },
+        name: { type: String, index: true },
+        age: { type: Number, min: 18, max: 120, index: true },
         infoDeInteres: MONGOOSE.Schema.Types.Mixed
     }
     //en caso de que queramos conectar este modelo con una colección con otro nombre
@@ -15,8 +15,14 @@ const AGENTE_SCHEMA = MONGOOSE.Schema({
 );
 
 //creamos método estático (del modelo)
-AGENTE_SCHEMA.statics.lista = function() {
-    return Agente.find();
+AGENTE_SCHEMA.statics.lista = function(filters, skip, limit, select, sort) {
+    const QUERY = Agente.find(filters);
+    QUERY.skip(skip);
+    QUERY.limit(limit);
+    QUERY.select(select);
+    QUERY.sort(sort);
+    return QUERY.exec(); //exec, ejecuta la query y devuelve una promesa
+
 }
 
 

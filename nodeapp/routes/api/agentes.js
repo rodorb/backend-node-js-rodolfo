@@ -12,8 +12,15 @@ const ROUTER = express.Router();
 
 
 
-//GET /api/agentes (aqui será / pero en app.js cuando apunte a estea router será /api/agentes)
-//Devuelve una lista de agentes
+/**
+ * @openapi
+ * /api/agentes:
+ *  get:
+ *    description: Devuelve una lista de agentes
+ *    responses:
+ *      200:
+ *        description: Returns JSON
+ */
 ROUTER.get('/', async(request, response, next) => {
     // const AGENTES = [{
     //     name: 'Fake Smith',
@@ -21,9 +28,24 @@ ROUTER.get('/', async(request, response, next) => {
     // }];
 
     try {
+        //recojo el queryparam name
+        const NAME = request.query.name;
+        const AGE = request.query.age;
+        const SKIP = request.query.skip;
+        const LIMIT = request.query.limit;
+        const SELECT = request.query.select; //campos que quiero mostrar
+        const SORT = request.query.sort;
+        const FILTERS = {};
         //esto devuelve una lista con todos los registros de 
         //la colección agentes
-        const AGENTES = await Agente.lista(); //método estático creado por mi en el modelo Agente
+        if (NAME) { //no me gusta
+            FILTERS.name = NAME;
+        }
+
+        if (AGE) { //no me gusta
+            FILTERS.age = AGE;
+        }
+        const AGENTES = await Agente.lista(FILTERS, SKIP, LIMIT, SELECT, SORT); //método estático creado por mi en el modelo Agente
         response.json({ results: AGENTES });
     } catch (error) {
         next(error);

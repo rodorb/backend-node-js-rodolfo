@@ -1,6 +1,6 @@
 'use strict';
 
-//cartgo la librería de mongoose
+//cargo la librería de mongoose
 const MONGOOSE = require('mongoose');
 
 //me suscribo al evento de error en caso de que falle la conexión a la BBDD

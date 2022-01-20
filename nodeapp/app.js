@@ -6,6 +6,7 @@ var logger = require('morgan'); //middleware para hacer logs de un aplicación e
 const { isAPIRequest } = require('./lib/utils')
     // var indexRouter = require('./routes/index');
     // var usersRouter = require('./routes/users');
+const SWAGGER_MIDDLEWARE = require('./lib/swaggerMiddleware');
 
 var app = express();
 
@@ -31,6 +32,8 @@ app.use(cookieParser());
 //mdw de ficheros estáticos
 app.use(express.static(path.join(__dirname, 'public'))); //esto evalúa los ficheros estáticos que cuelgan de /public por ejemplo --> /stylesheets/style.css 
 
+//cargo el middleware de documentación con el swagger
+app.use('/api-docs', SWAGGER_MIDDLEWARE)
 
 /**
  * RUTAS DE MI API
