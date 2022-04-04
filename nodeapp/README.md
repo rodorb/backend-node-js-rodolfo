@@ -56,4 +56,6 @@ Actualizar un agente:
 
 - /api/agentes/modificarAgente/:id
 
+Consultar documentación del API (swagger)
+- /api/docs
 

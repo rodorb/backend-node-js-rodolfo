@@ -1,37 +1,55 @@
-<!DOCTYPE html>
-<html>
+<% include header.ejs %>
 
-<head>
-    <title>
-        <%= title %>
-    </title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-</head>
+    <!-- Mashead header-->
+    <header class="masthead">
+        <div class="container px-5">
+            <div class="row gx-5 align-items-center">
+                <div class="col-lg-6">
+                    <!-- Mashead text and app badges-->
+                    <div class="mb-5 mb-lg-0 text-center text-lg-start">
+                        <%= ejemplo + '22' %>
 
-<body>
-    <% include header.ejs  %>
-        <!-- simbolo "-" sirve para que interprete la variable
-    como si fuera código  ejemplo es un trozo de código ahora
-    y se inyecta en el html como tal, si se usa el "="
-    entonces lo trata como cadena de txto-->
-        <%= ejemplo + '22' %>
-            <h2>Ejemplo de condicionales</h2>
-            <% if (condicion.esPar){ %>
-                <p>El segundo actual
-                    <%= condicion.segundo %> es par</p>
-                <% } else { %>
-                    <p>El segundo actual
-                        <%= condicion.segundo %> es impar</p>
-                    <% } %>
-                        <h2>Ejemplo de bucle</h2>
-                        <% usuarios.forEach((user)=>{ %>
-                            <li>
-                                El usuario
-                                <%= user.nombre %> tiene
-                                    <%= user.edad %>
-                            </li>
+                            <h2>
+                                <%= __('Contitional example') %>
+                            </h2>
+                            <% if (condicion.esPar) { %>
+                                <p>El segundo actual
+                                    <%= condicion.segundo %> es par</p>
+                                <% } else { %>
+                                    <p>El segundo actual
+                                        <%= condicion.segundo %> es impar</p>
+                                    <% } %>
 
-                            <%  }) %>
-</body>
+                                        <h2>
+                                            <%= __('Loop example') %>
+                                        </h2>
 
-</html>
+                                        <% usuarios.forEach( usuario => { %>
+                                            <li>
+                                                El usuario
+                                                <%= usuario.nombre %> tiene
+                                                    <%= usuario.edad %>
+                                            </li>
+                                            <% }) %>
+
+                                                <h2>
+                                                    <%= __('i18n example for plurals') %>
+                                                </h2>
+                                                <p>0
+                                                    <%= __n('Mouse', 0) %>
+                                                </p>
+                                                <p>1
+                                                    <%= __n('Mouse', 1) %>
+                                                </p>
+                                                <p>2
+                                                    <%= __n('Mouse', 2) %>
+                                                </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+    <% include footer.ejs %>

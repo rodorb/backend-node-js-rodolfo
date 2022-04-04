@@ -15,8 +15,10 @@ MONGOOSE.connection.once('connected', () => {
     console.log(`Conectado a MongoDB en la BBDD: ${MONGOOSE.connection.name}`);
 })
 
+
+console.log(process.env.MONGODB_CONNECTION_STRING);
 //hago la conexión (procotolo mongodb://localhost/<nombre-bbdd>)
-MONGOOSE.connect('mongodb://localhost/cursonode');
+MONGOOSE.connect(process.env.MONGODB_CONNECTION_STRING);
 
 
 //opcional, no hace falta exportarlo ya que los require son singleton

@@ -7,10 +7,14 @@ const { isAPIRequest } = require('./lib/utils')
     // var indexRouter = require('./routes/index');
     // var usersRouter = require('./routes/users');
 const SWAGGER_MIDDLEWARE = require('./lib/swaggerMiddleware');
+const i18n = require('./lib/i18nSetup');
 
 var app = express();
 
 require('./lib/connectMongoose');
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -42,13 +46,16 @@ app.use('/api-docs', SWAGGER_MIDDLEWARE)
 app.use('/api/agentes', require('./routes/api/agentes'));
 
 
+//Hacer que a aplicación use el middleware i18n
+app.use(i18n.init); //se pone después del mdw cookieParser para que sea capaz de parsear la cookie custom que seteemos
 /**
  * Rutas de mi website
  */
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 app.use('/', require('./routes/index'));
-app.use('/users', require('./routes/users'));
+app.use('/features', require('./routes/features'));
+app.use('/change-locale', require('./routes/change-locale'));
 
 
 

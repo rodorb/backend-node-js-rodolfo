@@ -6,10 +6,12 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
     const segundo = new Date().getSeconds();
+
+    const message = res.__('This is an example');
     //una forma de pasar variables a la vista
     //metiendola en res.locals
     //esto solo serviría en la vista index
-    res.locals.ejemplo = '<script>alert("Esto es un ejemplo")</script>';
+    res.locals.ejemplo = `<script>alert(${message})</script>`;
     res.locals.usuarios = [
         { nombre: 'Smith', edad: 30 },
         { nombre: 'Brown', edad: 37 },
