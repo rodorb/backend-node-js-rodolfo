@@ -8,7 +8,9 @@ const { isAPIRequest } = require('./lib/utils')
     // var usersRouter = require('./routes/users');
 const SWAGGER_MIDDLEWARE = require('./lib/swaggerMiddleware');
 const i18n = require('./lib/i18nSetup');
-
+const LoginController = require('./controllers/loginController');
+const PrivadoController = require('./controllers/privadoController');
+const session = require('express-session')
 var app = express();
 
 require('./lib/connectMongoose');
@@ -18,8 +20,8 @@ require('./lib/connectMongoose');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
+app.set('view engine', 'html');
+app.engine('html', require('ejs').__express);
 //Añado una variable global, desde la que 
 //tengan acceso todas las vistas de la aplicación
 app.locals.title = 'NodeApp';
@@ -48,6 +50,19 @@ app.use('/api/agentes', require('./routes/api/agentes'));
 
 //Hacer que a aplicación use el middleware i18n
 app.use(i18n.init); //se pone después del mdw cookieParser para que sea capaz de parsear la cookie custom que seteemos
+const loginController = new LoginController();
+const privadoController = new PrivadoController();
+
+//Setup de sesiones del Website
+app.use(session({
+    name: 'nodeapp-session', //nombre de la cookie
+    secret: 'asd', //la semilla para desencriptar 
+    saveUninitialized: true, //guarda la session aunque no se haya inicializado, no tenga nada
+    resave: false, //fuerza a que una sesion se vuelva a guardar en el store, aunque la sessión no haya sido modificada
+    cookie: {
+        maxAge: 1000 * 60 * 50 * 24 * 2 //la cookie expirará a los 2 días de inactividad en el website
+    }
+}));
 /**
  * Rutas de mi website
  */
@@ -56,9 +71,9 @@ app.use(i18n.init); //se pone después del mdw cookieParser para que sea capaz d
 app.use('/', require('./routes/index'));
 app.use('/features', require('./routes/features'));
 app.use('/change-locale', require('./routes/change-locale'));
-
-
-
+app.get('/login', loginController.index);
+app.post('/login', loginController.post);
+app.get('/privado', privadoController.index);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
