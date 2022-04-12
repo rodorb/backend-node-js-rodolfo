@@ -11,6 +11,9 @@ const i18n = require('./lib/i18nSetup');
 const LoginController = require('./controllers/loginController');
 const PrivadoController = require('./controllers/privadoController');
 const session = require('express-session')
+const sessionAuthMiddlewre = require('./lib/sessionAuthMiddleware');
+const basicAuthMiddleware = require('./lib/basicAuthMiddleware');
+const MongoStore = require('connect-mongo');
 var app = express();
 
 require('./lib/connectMongoose');
@@ -61,19 +64,33 @@ app.use(session({
     resave: false, //fuerza a que una sesion se vuelva a guardar en el store, aunque la sessión no haya sido modificada
     cookie: {
         maxAge: 1000 * 60 * 50 * 24 * 2 //la cookie expirará a los 2 días de inactividad en el website
-    }
+    },
+    //Guardo la session en la bbdd de mongodb, para que no se guarde en memoria y se pierda cada vez que se arranque y se pierda la session
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_CONNECTION_STRING
+    })
 }));
+
+//Hacemos que req.session esté disponible en TODAS LAS VISTAS
+app.use((request, response, next) => {
+    response.locals.session = request.session;
+    next();
+})
+
 /**
  * Rutas de mi website
  */
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 app.use('/', require('./routes/index'));
-app.use('/features', require('./routes/features'));
+app.use('/features', basicAuthMiddleware({ name: 'john', pass: '1234' }), require('./routes/features'));
 app.use('/change-locale', require('./routes/change-locale'));
 app.get('/login', loginController.index);
 app.post('/login', loginController.post);
-app.get('/privado', privadoController.index);
+app.get('/logout', loginController.logout);
+//Aquí uso el middleware que he creado que evalua la session del ususario
+//antes de llamar al mdw de la vista privada
+app.get('/privado', sessionAuthMiddlewre('ADMIN'), privadoController.index);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));

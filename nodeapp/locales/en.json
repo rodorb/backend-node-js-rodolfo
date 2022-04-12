@@ -11,5 +11,7 @@
 	"This is an example": "This is an example",
 	"Login": "Login",
 	"Invalid credentials": "Invalid credentials",
-	"Private Zone": "Private Zone"
+	"Private Zone": "Private Zone",
+	"Logout": "Logout",
+	"Private": "Private"
 }

@@ -24,7 +24,8 @@ class LoginController {
             }
             //apunto en la session de este usuario, que es un usuario logueado
             request.session.loggedUser = {
-                _id: user._id
+                _id: user._id,
+                role: user.role
             };
 
             //si lo encuentro y la contraseña coincide --> redirigir a la zona privada
@@ -33,6 +34,18 @@ class LoginController {
             next(error);
         }
 
+    }
+
+    logout(request, response, next) {
+        //metodo del mdw express-session, que regenera (limpia) la session, borra el objeto y lo deja vacío
+        request.session.regenerate(error => {
+            if (error) {
+                next(error);
+                return;
+            }
+            //redireccionar a home
+            response.redirect('/');
+        });
     }
 }
 

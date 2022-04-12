@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 //creo el esquema
 const userSchema = mongoose.Schema({
     email: { type: String, unique: true },
-    password: String
+    password: String,
+    role: String
 });
 
 //metodo esático
