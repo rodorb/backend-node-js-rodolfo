@@ -35,6 +35,8 @@ ROUTER.get('/', async(request, response, next) => {
         const LIMIT = request.query.limit;
         const SELECT = request.query.select; //campos que quiero mostrar
         const SORT = request.query.sort;
+
+        console.log('The user that made this request has the _id:', request.apiUserId);
         const FILTERS = {};
         //esto devuelve una lista con todos los registros de 
         //la colección agentes

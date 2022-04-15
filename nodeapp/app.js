@@ -14,6 +14,9 @@ const session = require('express-session')
 const sessionAuthMiddlewre = require('./lib/sessionAuthMiddleware');
 const basicAuthMiddleware = require('./lib/basicAuthMiddleware');
 const MongoStore = require('connect-mongo');
+const loginController = new LoginController();
+const privadoController = new PrivadoController();
+const jwtAuthMiddleware = require('./lib/jwtAuthMiddleware');
 var app = express();
 
 require('./lib/connectMongoose');
@@ -44,17 +47,19 @@ app.use(express.static(path.join(__dirname, 'public'))); //esto evalúa los fich
 //cargo el middleware de documentación con el swagger
 app.use('/api-docs', SWAGGER_MIDDLEWARE)
 
+
 /**
  * RUTAS DE MI API
  */
 //uso en la aplicación la ruta de agentes que acabo de crear
-app.use('/api/agentes', require('./routes/api/agentes'));
+app.post('/api/login', loginController.postJWT);
+app.use('/api/agentes', jwtAuthMiddleware, require('./routes/api/agentes'));
+
 
 
 //Hacer que a aplicación use el middleware i18n
 app.use(i18n.init); //se pone después del mdw cookieParser para que sea capaz de parsear la cookie custom que seteemos
-const loginController = new LoginController();
-const privadoController = new PrivadoController();
+
 
 //Setup de sesiones del Website
 app.use(session({
